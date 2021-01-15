@@ -6,7 +6,7 @@ namespace InsitesConsulting\AzureKeyVault;
  * Class Facade
  * @package InsitesConsulting\AzureKeyVault
  *
- * @method static string secret(string $name)
+ * @method static string|null secret(string $name, ?string $default = null)
  */
 class Facade extends \Illuminate\Support\Facades\Facade
 {

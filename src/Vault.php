@@ -50,7 +50,7 @@ class Vault {
         return "https://{$this->vault}.vault.azure.net/";
     }
 
-    public function secret(string $name): string
+    public function secret(string $name, ?string $default = null): ?string
     {
         $response = Http::withToken($this->authToken())
             ->accept('application/json')
@@ -63,7 +63,10 @@ class Vault {
             );
         if ($response->successful()) {
             return $response->json()['value'];
-        } else {
+        } elseif ($response->status() == 404) {
+            return $default;
+        }
+        else {
             throw new AzureKeyVaultException($response->json()['error']['message']);
         }
     }
