@@ -9,10 +9,39 @@
             "email": "stephen.smith@insites-consulting.com"
         }
     ],
+    "require": {
+        "php": "^7.4",
+        "illuminate/http": "^8",
+        "illuminate/support": "^8"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.5"
     },
-    "require": {
-        "illuminate/http": "^8.22"
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "InsitesConsulting\\AzureKeyVault\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "InsitesConsulting\\AzureKeyVault\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "InsitesConsulting\\AzureKeyVault\\ServiceProvider"
+            ],
+            "aliases": {
+                "Vault": "InsitesConsulting\\AzureKeyVault\\Facade"
+            }
+        }
     }
 }
