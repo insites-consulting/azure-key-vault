@@ -2,6 +2,7 @@
 
 namespace InsitesConsulting\AzureKeyVault;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class Vault {
@@ -26,6 +27,11 @@ class Vault {
 
     private function authToken(): string
     {
+        $cached_token = Cache::get('keyvault_token');
+        if ($cached_token) {
+            return $cached_token;
+        }
+
         $response = Http::asForm()
         ->post(
             "https://login.microsoftonline.com/{$this->tenant_id}/oauth2/token",
@@ -36,8 +42,11 @@ class Vault {
                 'grant_type' => 'client_credentials',
             ]
         )->json();
+        $token = $response['access_token'];
+        $expiry = now()->addSeconds((int)$response['expires_in']);
 
-        return $response['access_token'];
+        Cache::put('keyvault_token', $token, $expiry);
+        return $token;
     }
 
     private function vaultUrl(): string
