@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.4",
+        "illuminate/cache": "^8",
         "illuminate/http": "^8",
         "illuminate/support": "^8"
     },
