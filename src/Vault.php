@@ -10,7 +10,6 @@ class Vault {
     private $client_id;
     private $client_secret;
     private $vault;
-    private $token;
 
     public function __construct(
         string $tenant_id,
@@ -27,10 +26,6 @@ class Vault {
 
     private function authToken(): string
     {
-        if ($this->token) {
-            return $this->token;
-        }
-
         $response = Http::asForm()
         ->post(
             "https://login.microsoftonline.com/{$this->tenant_id}/oauth2/token",
@@ -42,7 +37,7 @@ class Vault {
             ]
         )->json();
 
-        return $this->token = $response['access_token'];
+        return $response['access_token'];
     }
 
     private function vaultUrl(): string
