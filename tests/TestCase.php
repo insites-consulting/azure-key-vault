@@ -34,6 +34,14 @@ abstract class TestCase extends BaseTestCase
 
     protected function getEnvironmentSetUp($app)
     {
-
+        $app['config']->set(
+            'vault',
+            [
+                'tenant_id' => 'test-tenant',
+                'client_id' => 'test-client',
+                'client_secret' => 'secret-string',
+                'vault' => 'test-vault',
+            ]
+        );
     }
 }
