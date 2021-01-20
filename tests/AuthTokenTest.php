@@ -3,6 +3,7 @@
 namespace InsitesConsulting\AzureKeyVault\Tests;
 
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
@@ -67,7 +68,8 @@ class AuthTokenTest extends TestCase
             ->with(
                 'keyvault_token',
                 'test-token',
-                Date::getTestNow()->addSeconds(3600)
+//                equalTo(Date::getTestNow()->addSeconds(3600))
+                anInstanceOf(Carbon::class)
             );
 
         Vault::secret('test');
