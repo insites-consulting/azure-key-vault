@@ -14,17 +14,22 @@ class AuthTokenTest extends TestCase
     {
         parent::setUp();
 
-        Http::fakeSequence()
-            ->push(
-                [
-                    'expires_in' => 3600,
-                    'access_token' => 'test-token',
-                ]
-            )->push(
-                [
-                    'value' => 'test-secret-value',
-                ]
-            );
+        Http::fake(
+            [
+                'https://login.microsoftonline.com/test-tenant/oauth2/token' => Http::response(
+                    [
+                        'expires_in' => 3600,
+                        'access_token' => 'test-token',
+                    ]
+                ),
+                'https://test-vault.vault.azure.net/secrets/test?api-version=7.1' =>
+                    Http::response(
+                        [
+                            'value' => 'test-secret-value',
+                        ]
+                    ),
+            ]
+        );
     }
 
     public function testCorrectAuthUrlUsed()
@@ -66,5 +71,29 @@ class AuthTokenTest extends TestCase
             );
 
         Vault::secret('test');
+    }
+
+    public function testCachedTokenUsed()
+    {
+        Cache::shouldReceive('get')
+            ->once()
+            ->with('keyvault_token')
+            ->andReturn('cached-token');
+
+        Vault::secret('test');
+
+        Http::assertSent(
+            function (Request $request) {
+                return $request->hasHeader(
+                    'Authorization',
+                    'Bearer cached-token'
+                );
+            }
+        );
+        Http::assertNotSent(
+            function (Request $request) {
+                return $request->url() == 'https://login.microsoftonline.com/test-tenant/oauth2/token';
+            }
+        );
     }
 }
