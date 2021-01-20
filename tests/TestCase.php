@@ -2,8 +2,8 @@
 
 namespace InsitesConsulting\AzureKeyVault\Tests;
 
+use Hamcrest\Util;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\Http;
 use InsitesConsulting\AzureKeyVault\Facade;
 use InsitesConsulting\AzureKeyVault\ServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -14,6 +14,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         Date::setTestNow(now());
+        Util::registerGlobalFunctions();
     }
 
     protected function getPackageProviders($app)
