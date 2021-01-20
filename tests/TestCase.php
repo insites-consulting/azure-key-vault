@@ -13,7 +13,6 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Http::fake();
         Date::setTestNow(now());
     }
 
