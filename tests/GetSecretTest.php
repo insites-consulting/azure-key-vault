@@ -18,7 +18,7 @@ class GetSecretTest extends TestCase
                         'access_token' => 'test-token',
                     ]
                 ),
-                'https://test-vault.vault.azure.net/secrets/*' =>
+                'https://test-vault.vault.azure.net/secrets/test-secret?api-version=7.1' =>
                     Http::response(
                         [
                             'value' => 'test-secret-value',
@@ -39,7 +39,7 @@ class GetSecretTest extends TestCase
                         'access_token' => 'test-token',
                     ]
                 ),
-                'https://test-vault.vault.azure.net/secrets/*' =>
+                'https://test-vault.vault.azure.net/secrets/nonexistent?api-version=7.1' =>
                     Http::response([], 404),
             ]
         );
@@ -58,7 +58,7 @@ class GetSecretTest extends TestCase
                         'access_token' => 'test-token',
                     ]
                 ),
-                'https://test-vault.vault.azure.net/secrets/*' =>
+                'https://test-vault.vault.azure.net/secrets/test-secret?api-version=7.1' =>
                     Http::response(
                         [
                             'error' => [
@@ -71,6 +71,6 @@ class GetSecretTest extends TestCase
         );
         $this->expectException(AzureKeyVaultException::class);
         $this->expectExceptionMessage('it went bang');
-        Vault::secret('nonexistent', 'default-value');
+        Vault::secret('test-secret', 'default-value');
     }
 }
