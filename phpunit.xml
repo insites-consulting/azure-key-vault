@@ -18,9 +18,9 @@
       <directory suffix=".php">src/</directory>
     </include>
     <report>
-      <clover outputFile="build/logs/clover.xml"/>
-      <html outputDirectory="build/coverage"/>
-      <text outputFile="build/coverage.txt"/>
+      <clover outputFile="test-report/logs/clover.xml"/>
+      <html outputDirectory="test-report/coverage"/>
+      <text outputFile="test-report/coverage.txt"/>
     </report>
   </coverage>
   <testsuites>
@@ -29,6 +29,6 @@
     </testsuite>
   </testsuites>
   <logging>
-    <junit outputFile="build/report.junit.xml"/>
+    <junit outputFile="test-report/report.junit.xml"/>
   </logging>
 </phpunit>
