@@ -2,7 +2,7 @@
 
 use InsitesConsulting\AzureKeyVault\Facade as Vault;
 
-function secret(string $name): string
+function secret(string $name, ?string $default = null): ?string
 {
-    return Vault::secret($name);
+    return Vault::secret($name, $default);
 }
