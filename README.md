@@ -1,12 +1,12 @@
-#Azure Key Vault wrapper for Laravel 8
+# Azure Key Vault wrapper for Laravel 8
 
-##Overview
+## Overview
 
 This package allows secrets to be fetched from an
 [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/),
 with an interface similar to `env()` and `config()`.
 
-##Installation
+## Installation
 
 Require this package with composer:
 ```
@@ -39,7 +39,7 @@ The configuration entries are as follows:
  - `client_secret` the service principal shared secret
  - `vault` the vault name
 
-##Usage
+## Usage
 This package provides a facade called `Vault`, with one method
 `Vault::secret()`, as well as a global helper function `secret()`.
 
