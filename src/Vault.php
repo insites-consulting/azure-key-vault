@@ -74,4 +74,9 @@ class Vault
             );
         }
     }
+
+    public function setVault(string $vault): void
+    {
+        $this->vault = $vault;
+    }
 }

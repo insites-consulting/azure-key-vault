@@ -40,8 +40,9 @@ The configuration entries are as follows:
  - `vault` the vault name
 
 ## Usage
-This package provides a facade called `Vault`, with one method
-`Vault::secret()`, as well as a global helper function `secret()`.
+This package provides a facade called `Vault`, with two methods
+`Vault::secret()` and `Vault::setVault()`, as well as a global helper function
+`secret()`.
 
 To fetch a secret called 'apikey':
 ```php
@@ -64,4 +65,14 @@ $secret = secret('apikey');
 $other_secret = secret('otherkey', 'default-key');
 ```
 
-Note that this package can only work with one Azure Key Vault.
+In order to work with multiple vaults, use `Vault::setVault()` to change the
+vault name used:
+
+```php
+$secret = secret('apikey');
+Vault::setVault('other-vault');
+$other_secret = secret('apikey');
+```
+
+This is persistent: the newly set vault will remain until `Vault::setVault()`
+is called again.
