@@ -27,9 +27,8 @@ class Vault
 
     private function authToken(): string
     {
-        $cached_token = Cache::get('keyvault_token');
-        if ($cached_token) {
-            return $cached_token;
+        if (Cache::has('keyvault_token')) {
+            return Cache::get('keyvault_token');
         }
 
         $response = Http::asForm()

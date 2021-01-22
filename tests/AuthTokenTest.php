@@ -58,17 +58,16 @@ class AuthTokenTest extends TestCase
 
     public function testCorrectTokenCached()
     {
-        Cache::shouldReceive('get')
+        Cache::shouldReceive('has')
             ->once()
             ->with('keyvault_token')
-            ->andReturn(null);
+            ->andReturn(false);
 
         Cache::shouldReceive('put')
             ->once()
             ->with(
                 'keyvault_token',
                 'test-token',
-//                equalTo(Date::getTestNow()->addSeconds(3600))
                 anInstanceOf(Carbon::class)
             );
 
@@ -77,6 +76,11 @@ class AuthTokenTest extends TestCase
 
     public function testCachedTokenUsed()
     {
+        Cache::shouldReceive('has')
+            ->once()
+            ->with('keyvault_token')
+            ->andReturn(true);
+
         Cache::shouldReceive('get')
             ->once()
             ->with('keyvault_token')
