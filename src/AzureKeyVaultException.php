@@ -2,6 +2,7 @@
 
 namespace InsitesConsulting\AzureKeyVault;
 
-class AzureKeyVaultException extends \Exception {
+class AzureKeyVaultException extends \Exception
+{
 
 }

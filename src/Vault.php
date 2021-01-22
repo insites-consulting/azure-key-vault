@@ -5,7 +5,8 @@ namespace InsitesConsulting\AzureKeyVault;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class Vault {
+class Vault
+{
 
     protected string $tenant_id;
     private $client_id;
@@ -17,8 +18,7 @@ class Vault {
         string $client_id,
         string $client_secret,
         string $vault
-    )
-    {
+    ) {
         $this->tenant_id = $tenant_id;
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
@@ -60,17 +60,15 @@ class Vault {
             ->accept('application/json')
             ->get(
                 $this->vaultUrl() . "secrets/$name",
-
                 [
-                    "api-version"=>"7.1"
+                    "api-version" => "7.1"
                 ]
             );
         if ($response->successful()) {
             return $response->json()['value'];
         } elseif ($response->status() == 404) {
             return $default;
-        }
-        else {
+        } else {
             throw new AzureKeyVaultException(
                 $response->json()['error']['message'],
                 $response->status()
