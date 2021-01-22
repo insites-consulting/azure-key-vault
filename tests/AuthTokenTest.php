@@ -5,7 +5,6 @@ namespace InsitesConsulting\AzureKeyVault\Tests;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use InsitesConsulting\AzureKeyVault\Facade as Vault;
 

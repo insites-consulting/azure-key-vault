@@ -48,7 +48,7 @@ class GetSecretTest extends TestCase
             Vault::secret('nonexistent', 'default-value'));
     }
 
-    public function testNullReturnedForNonexistentSecretIfNoDefaultVAlueSet()
+    public function testNullReturnedForNonexistentSecretIfNoDefaultValueSet()
     {
         Http::fake(
             [
