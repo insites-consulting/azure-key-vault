@@ -75,8 +75,8 @@ class Vault
         }
     }
 
-    public function setVault(string $vault): void
+    public function setVault(?string $vault = null): void
     {
-        $this->vault = $vault;
+        $this->vault = $vault ?? config('vault.vault');
     }
 }
