@@ -76,3 +76,12 @@ $other_secret = secret('apikey');
 
 This is persistent: the newly set vault will remain until `Vault::setVault()`
 is called again.
+
+Calling `Vault::setVault()` with no argument will reset the vault name to that
+set in the config file:
+
+```php
+$other_secret = secret('apikey');
+Vault::setVault();
+$secret = secret('apikey');
+```
