@@ -74,6 +74,29 @@ class Vault
             );
         }
     }
+    
+    public function setSecret(string $name, string $value): bool
+    {
+        $response = Http::withToken($this->authToken())
+            ->accept('application/json')
+            ->withOptions([
+                'query' => ['api-version' => '7.1']
+            ])
+            ->put(
+                $this->vaultUrl() . "secrets/$name",
+                [
+                    "value" => $value,
+                ]
+            );
+        if ($response->successful()) {
+            return true;
+        } else {
+            throw new AzureKeyVaultException(
+                $response->json()['error']['message'],
+                $response->status()
+            );
+        }
+    }
 
     public function setVault(?string $vault = null): void
     {
