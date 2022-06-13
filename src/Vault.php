@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Http;
 
 class Vault
 {
-
     protected string $tenant_id;
     private $client_id;
     private $client_secret;
