@@ -30,7 +30,7 @@ configuration is used:
 
 This package publishes its configuration to `vault.php`. This can be done with:
 ```
-php artisan vendor:publish --provider=InsitesConsulting\AzureKeyVault\ServiceProvider
+php artisan vendor:publish --provider='InsitesConsulting\AzureKeyVault\ServiceProvider'
 ```
 
 The configuration entries are as follows:
