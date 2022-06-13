@@ -74,8 +74,8 @@ class Vault
             );
         }
     }
-    
-    public function setSecret(string $name, string $value): bool
+
+    public function setSecret(string $name, string $value): void
     {
         $response = Http::withToken($this->authToken())
             ->accept('application/json')
@@ -88,9 +88,7 @@ class Vault
                     "value" => $value,
                 ]
             );
-        if ($response->successful()) {
-            return true;
-        } else {
+        if (!$response->successful()) {
             throw new AzureKeyVaultException(
                 $response->json()['error']['message'],
                 $response->status()
