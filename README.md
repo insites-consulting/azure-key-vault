@@ -2,7 +2,7 @@
 
 ## Overview
 
-This package allows secrets to be fetched from an
+This package allows secrets to be fetched from, or set in, an
 [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/),
 with an interface similar to `env()` and `config()`.
 
@@ -40,9 +40,9 @@ The configuration entries are as follows:
  - `vault` the vault name
 
 ## Usage
-This package provides a facade called `Vault`, with two methods
-`Vault::secret()` and `Vault::setVault()`, as well as a global helper function
-`secret()`.
+This package provides a facade called `Vault`, with three methods
+`Vault::secret()`, `Vault::setSecret()` and `Vault::setVault()`, as well as a 
+global helper function `secret()`.
 
 To fetch a secret called 'apikey':
 ```php
@@ -64,6 +64,15 @@ The global helper function behaves identically to the facade method:
 $secret = secret('apikey');
 $other_secret = secret('otherkey', 'default-key');
 ```
+
+To set a secret called 'apikey' to the value 'longsecretvalue':
+```php
+Vault::setSecret('apikey', 'longsecretvalue');
+```
+
+This method is void, but will throw an 
+`InsitesConsulting\AzureKeyVault\AzureKeyVaultException` on error, in the same 
+manner as `Vault::secret()`.
 
 In order to work with multiple vaults, use `Vault::setVault()` to change the
 vault name used:
