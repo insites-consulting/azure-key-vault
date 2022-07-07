@@ -1,4 +1,4 @@
-# Azure Key Vault wrapper for Laravel 8
+# Azure Key Vault wrapper for Laravel
 
 ## Overview
 
