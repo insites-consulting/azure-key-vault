@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 class Vault
 {
     const CACHE_KEY = 'keyvault_token';
-    
+
     protected string $tenant_id;
     private string $client_id;
     private string $client_secret;
@@ -31,8 +31,8 @@ class Vault
      */
     private function authToken(): string
     {
-        if (Cache::has(self::CACHE_ACCESS_TOKEN)) {
-            return Cache::get(self::CACHE_ACCESS_TOKEN);
+        if (Cache::has(self::CACHE_KEY)) {
+            return Cache::get(self::CACHE_KEY);
         }
 
         $response = Http::asForm()
@@ -45,19 +45,19 @@ class Vault
                 'grant_type' => 'client_credentials',
             ]
         );
-        
+
         if (!$response->successful()) {
             throw new AzureKeyVaultException(
                 $response->json()['error']['message'],
                 $response->status()
             );
         }
-        
-        $response = $response->json();        
+
+        $response = $response->json();
         $token = $response['access_token'];
         $expiry = now()->addSeconds((int) $response['expires_in']);
 
-        Cache::put(self::CACHE_ACCESS_TOKEN, $token, $expiry);
+        Cache::put(self::CACHE_KEY, $token, $expiry);
         return $token;
     }
 
