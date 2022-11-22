@@ -27,7 +27,7 @@ class Vault
     }
 
     /**
-     * Using the class variables, authenticate with Azure returning an access token.
+     * Authenticate with Azure returning an access token.
      */
     private function authToken(): string
     {
