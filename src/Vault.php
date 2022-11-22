@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class Vault
 {
-    const CACHE_KEY = 'keyvault_token';
+    private const ACCESS_TOKEN_CACHE_KEY = 'keyvault_token';
 
     protected string $tenant_id;
     private string $client_id;
@@ -31,8 +31,8 @@ class Vault
      */
     private function authToken(): string
     {
-        if (Cache::has(self::CACHE_KEY)) {
-            return Cache::get(self::CACHE_KEY);
+        if (Cache::has(self::ACCESS_TOKEN_CACHE_KEY)) {
+            return Cache::get(self::ACCESS_TOKEN_CACHE_KEY);
         }
 
         $response = Http::asForm()
@@ -57,7 +57,7 @@ class Vault
         $token = $response['access_token'];
         $expiry = now()->addSeconds((int) $response['expires_in']);
 
-        Cache::put(self::CACHE_KEY, $token, $expiry);
+        Cache::put(self::ACCESS_TOKEN_CACHE_KEY, $token, $expiry);
         return $token;
     }
 
