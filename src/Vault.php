@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Http;
 
 class Vault
 {
+    private const ACCESS_TOKEN_CACHE_KEY = 'keyvault_token';
+
     protected string $tenant_id;
-    private $client_id;
-    private $client_secret;
-    private $vault;
+    private string $client_id;
+    private string $client_secret;
+    private string $vault;
 
     public function __construct(
         string $tenant_id,
@@ -24,10 +26,14 @@ class Vault
         $this->vault = $vault;
     }
 
+    /**
+     * Authenticate with Azure returning an access token.
+     * @throws AzureKeyVaultException
+     */
     private function authToken(): string
     {
-        if (Cache::has('keyvault_token')) {
-            return Cache::get('keyvault_token');
+        if (Cache::has(self::ACCESS_TOKEN_CACHE_KEY)) {
+            return Cache::get(self::ACCESS_TOKEN_CACHE_KEY);
         }
 
         $response = Http::asForm()
@@ -39,19 +45,35 @@ class Vault
                 'resource' => 'https://vault.azure.net',
                 'grant_type' => 'client_credentials',
             ]
-        )->json();
-        $token = $response['access_token'];
-        $expiry = now()->addSeconds((int)$response['expires_in']);
+        );
 
-        Cache::put('keyvault_token', $token, $expiry);
+        if (!$response->successful()) {
+            throw new AzureKeyVaultException(
+                $response->json()['error']['message'],
+                $response->status()
+            );
+        }
+
+        $response = $response->json();
+        $token = $response['access_token'];
+        $expiry = now()->addSeconds((int) $response['expires_in']);
+
+        Cache::put(self::ACCESS_TOKEN_CACHE_KEY, $token, $expiry);
         return $token;
     }
 
+    /**
+     * Return the full URL for the vault
+     */
     private function vaultUrl(): string
     {
         return "https://{$this->vault}.vault.azure.net/";
     }
 
+    /**
+     * Return the secret requested, or the default if no value found.
+     * @throws AzureKeyVaultException
+     */
     public function secret(string $name, ?string $default = null): ?string
     {
         $response = Http::withToken($this->authToken())
@@ -74,6 +96,10 @@ class Vault
         }
     }
 
+    /**
+     * Set a secret using the given value
+     * @throws AzureKeyVaultException
+     */
     public function setSecret(string $name, string $value): void
     {
         $response = Http::withToken($this->authToken())
@@ -95,6 +121,9 @@ class Vault
         }
     }
 
+    /**
+     * Change the current vault selection to a different vault.
+     */
     public function setVault(?string $vault = null): void
     {
         $this->vault = $vault ?? config('vault.vault');
