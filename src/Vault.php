@@ -28,6 +28,7 @@ class Vault
 
     /**
      * Authenticate with Azure returning an access token.
+     * @throws AzureKeyVaultException
      */
     private function authToken(): string
     {
@@ -71,6 +72,7 @@ class Vault
 
     /**
      * Return the secret requested, or the default if no value found.
+     * @throws AzureKeyVaultException
      */
     public function secret(string $name, ?string $default = null): ?string
     {
@@ -96,6 +98,7 @@ class Vault
 
     /**
      * Set a secret using the given value
+     * @throws AzureKeyVaultException
      */
     public function setSecret(string $name, string $value): void
     {
