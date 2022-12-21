@@ -2,8 +2,11 @@
 
 namespace InsitesConsulting\AzureKeyVault;
 
+use GuzzleHttp\Psr7\Query;
+use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\LazyCollection;
 
 class Vault
 {
@@ -68,6 +71,58 @@ class Vault
     private function vaultUrl(): string
     {
         return "https://{$this->vault}.vault.azure.net/";
+    }
+
+    private function getSkipToken(?string $url): ?string
+    {
+        if (is_null($url)) {
+            return null;
+        }
+
+        $parsed_url = new Uri($url);
+        $parameters = Query::parse($parsed_url->getQuery());
+        return $parameters['$skiptoken'] ?? null;
+    }
+
+    public function allSecrets(): LazyCollection
+    {
+        $endpoint = $this->vaultUrl() . "secrets";
+
+        return LazyCollection::make(
+            function () use ($endpoint) {
+                $skip_token = null;
+                do {
+                    $parameters = [
+                        "api-version" => "7.1",
+                        "maxresults" => 25, // Always ask for the maximum allowed.
+                    ];
+                    if ($skip_token !== null) {
+                        $parameters['$skiptoken'] = $skip_token;
+                    }
+                    $response = Http::withToken($this->authToken())
+                        ->accept('application/json')
+                        ->get(
+                            $endpoint,
+                            $parameters
+                        );
+                    $payload = $response->json();
+
+                    if (!$response->successful()) {
+                        throw new AzureKeyVaultException(
+                            $payload['error_description'],
+                            $response->status()
+                        );
+                    }
+
+                    $skip_token = $this->getSkipToken($payload['nextLink']);
+
+                    foreach ($payload['value'] as $secret) {
+                        yield $secret['id'];
+                    }
+
+                } while (!is_null($skip_token));
+            }
+        );
     }
 
     /**
