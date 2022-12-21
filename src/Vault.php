@@ -49,7 +49,7 @@ class Vault
 
         if (!$response->successful()) {
             throw new AzureKeyVaultException(
-                $response->json()['error']['message'],
+                $response->json()['error_description'],
                 $response->status()
             );
         }
