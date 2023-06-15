@@ -77,17 +77,13 @@ class GetSecretTest extends TestCase
                 ),
                 'https://test-vault.vault.azure.net/secrets/test-secret?api-version=7.1' =>
                     Http::response(
-                        [
-                            'error' => [
-                                'message' => 'it went bang',
-                            ],
-                        ],
+                        json_decode(file_get_contents(__DIR__ . '/azure_error.json'), true),
                         500
                     ),
             ]
         );
         $this->expectException(AzureKeyVaultException::class);
-        $this->expectExceptionMessage('it went bang');
+        $this->expectExceptionMessage("AADSTS70011: The provided value for the input parameter 'scope' is not valid");
         Vault::secret('test-secret', 'default-value');
     }
 
@@ -160,17 +156,13 @@ class GetSecretTest extends TestCase
                 ),
                 'https://test-vault.vault.azure.net/secrets/test-secret?api-version=7.1' =>
                     Http::response(
-                        [
-                            'error' => [
-                                'message' => 'it went bang',
-                            ],
-                        ],
+                        json_decode(file_get_contents(__DIR__ . '/azure_error.json'), true),
                         500
                     ),
             ]
         );
         $this->expectException(AzureKeyVaultException::class);
-        $this->expectExceptionMessage('it went bang');
+        $this->expectExceptionMessage("AADSTS70011: The provided value for the input parameter 'scope' is not valid");
         Vault::secret('test-secret', 'default-value');
     }
 }
